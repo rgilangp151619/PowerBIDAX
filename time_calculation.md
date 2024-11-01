@@ -1,32 +1,14 @@
-Receipt Duration = 
-IF(
-    'Inbound'[START CHECKING DATE] = 'Inbound'[Complete Posting 1 Date_1],
-    TIME(0,0,0),
-    TIME(
-        INT(
-            ABS(DATEDIFF(
-                'Inbound'[Complete Posting 1 Date_1],
-                'Inbound'[START CHECKING DATE],
-                SECOND
-            )) / 3600
-        ),
-        INT(
-            MOD(
-                ABS(DATEDIFF(
-                    'Inbound'[Complete Posting 1 Date_1],
-                    'Inbound'[START CHECKING DATE],
-                    SECOND
-                )),
-                3600
-            ) / 60
-        ),
-        MOD(
-            ABS(DATEDIFF(
-                'Inbound'[Complete Posting 1 Date_1],
-                'Inbound'[START CHECKING DATE],
-                SECOND
-            )),
-            60
-        )
+AVERAGE Lead Time = 
+VAR TotalSeconds = 
+    AVERAGEX(
+        'Table',
+        HOUR('Table'[Column]) * 3600 + 
+        MINUTE('Table'[Column]) * 60 + 
+        SECOND('Table'[Column])
     )
-)
+RETURN
+    TIME(
+        INT(TotalSeconds / 3600),            // Hours
+        INT(MOD(TotalSeconds, 3600) / 60),   // Minutes
+        MOD(TotalSeconds, 60)                // Seconds
+    )
