@@ -1,6 +1,6 @@
 let
     StartDate = #date(2024,1,1),
-    EndDate = #date(2024,12,31),
+    EndDate = Date.From(DateTime.LocalNow()),
     NumberOfDays = Duration.Days( EndDate - StartDate ),
     Dates = List.Dates(StartDate, NumberOfDays+1, #duration(1,0,0,0)),
     #"Converted to Table" = Table.FromList(Dates, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
@@ -17,6 +17,6 @@ let
     #"Added Custom1" = Table.AddColumn(#"Removed Columns", "Custom", each "Q" & Number.ToText([Quarter])),
     #"Renamed Columns1" = Table.RenameColumns(#"Added Custom1",{{"Custom", "Quarter.1"}}),
     #"Added Custom2" = Table.AddColumn(#"Renamed Columns1", "Year Quarter", each [Quarter.1] &"-" & Number.ToText([Year])),
-    #"Added Custom3" = Table.AddColumn(#"Added Custom2", "Year Month", each [Month Name] & " " & Number.ToText([Year]))
+    #"Added Custom3" = Table.AddColumn(#"Added Custom2", "Year Month", each [Month Name] & " " & Number.ToText([Year])),
 in
-    #"Added Custom3"
+    #"Added Index"
